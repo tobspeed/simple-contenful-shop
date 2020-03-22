@@ -9,7 +9,58 @@
 
 <div class="content" role="main">
 
+  <div class="productCategories">
 
+    <ng-container *ngFor="let productCategory of productCategories">
+      <div *ngIf="selectedProductCategories.indexOf(productCategory.fields.name) !== -1; then thenBlock else elseBlock"></div>
+      <ng-template #thenBlock>
+          <button type="button" class="btn btn-primary category" (click)="onProductCategoryClicked(productCategory.fields.name)"> {{ productCategory.fields.name }}</button>
+      </ng-template>
+      <ng-template #elseBlock>
+        <button type="button" class="btn btn-outline-secondary category" (click)="onProductCategoryClicked(productCategory.fields.name)"> {{ productCategory.fields.name }}</button>
+      </ng-template>
+    </ng-container>
+  </div>
+
+  <div class="products">
+    <div *ngFor="let product of productsFilteredByProductCategories" class="card product" style="width: 18rem;">
+      <div class="image-container">
+        <img src="{{ product.fields.image.fields.file.url}}" class="card-img-top image" alt="...">
+      </div>
+      <div class="product card-body">
+        <h5 class="card-title title">
+          <div class="name">{{ product.fields.name }}</div>
+          <div class="additionalInformation">{{ product.fields.additionalInformation }}</div>
+        </h5>
+        <p class="card-text shortDescription"> {{ product.fields.shortDescription }}</p>
+        <div class="prices">
+          <div *ngFor="let price of product.fields.prices" class="price">
+            <div class="quantity">{{price.fields.quantity}}</div>
+            <div class="unit">{{price.fields.unit}}</div>
+            <div class="spacer"></div>
+            <div class="amount">{{price.fields.amount | currency :  'EUR':'symbol':'1.2-2' : 'de' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="contact">
+      <div class="email">
+        <a href="mailto:{{email}}">{{email}}</a>
+      </div>
+      <div class="phone">
+        06128-9364830
+      </div>
+      <div class="address">
+        Im Maisel 10
+        Taunusstein, 65232
+        Deutschland
+      </div>
+    </div>
+
+  </footer>
 
 
   <svg id="clouds" alt="Gray Clouds Background" xmlns="http://www.w3.org/2000/svg" width="2611.084" height="485.677" viewBox="0 0 2611.084 485.677">
