@@ -18,6 +18,7 @@ export class AppComponent {
   productCategories: Entry<any>[] = [];
   selectedProductCategories: string[] = [];
   email = environment.contact.email;
+  searchTerm = "";
 
   constructor(private contentfulService: ContentfulService) {
   }
@@ -47,20 +48,36 @@ export class AppComponent {
     if(this.selectedProductCategories.length === 0) {
       this.productsFilteredByProductCategories = this.products;
     } else {
-      this.filterProductsByProductsCategories();
+      this.filterProductsByProductsCategoriesAndSearchTerm();
     }
   }
 
-  private filterProductsByProductsCategories() {
-    this.productsFilteredByProductCategories = this.products.filter(product => {
-      return product.fields.categories
-      .filter(
-        category => {
-          return this.selectedProductCategories.indexOf(category.fields.name) !== -1;
-        }
-      ).length > 0;
-    });
-    console.log(this.products.length);
+  private filterProductsByProductsCategoriesAndSearchTerm() {
+    let allProducts = this.products;
+    let searchTerm = this.searchTerm.toLowerCase();
+
+    if(this.searchTerm.length >= 0) {
+      allProducts = allProducts.filter(product => {
+          console.log(product.fields.name.toLowerCase().includes(searchTerm));
+          return product.fields.name.toLowerCase().includes(searchTerm) ||
+            (product.fields.additionalInformation && product.fields.additionalInformation.toLowerCase().includes(searchTerm ))
+      });
+    }
+
+
+    if(this.selectedProductCategories.length !== 0) {
+      this.productsFilteredByProductCategories = allProducts.filter(product => {
+        return product.fields.categories
+        .filter(
+          category => {
+            return this.selectedProductCategories.indexOf(category.fields.name) !== -1;
+          }
+        ).length > 0;
+      });
+    } else {
+      this.productsFilteredByProductCategories = allProducts;
+    }
+
   }
 
   private loadProductCategories() {
@@ -79,4 +96,13 @@ export class AppComponent {
     )
   }
 
+  onSearchTermChanged() {
+    this.filterProductsByProductsCategoriesAndSearchTerm();
+  }
+
+  clearAllSearchFilter() {
+    this.selectedProductCategories = [];
+    this.searchTerm = "";
+    this.filterProductsByProductsCategoriesAndSearchTerm();
+  }
 }

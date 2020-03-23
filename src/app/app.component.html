@@ -3,7 +3,6 @@
 
 </div>
 <div class="header">
-  <img src="" />
 
 </div>
 
@@ -22,27 +21,59 @@
     </ng-container>
   </div>
 
+  <div class="searchBar">
+    <mat-form-field class="searchField">
+      <span class="prefix" matPrefix><mat-icon>search</mat-icon></span>
+      <mat-label>Hungrig auf? Etwas von Emmi? Was kommt aus Deutschland? Brauchst du noch Mehl?</mat-label>
+      <input matInput type="text" [(ngModel)]="searchTerm" (keyup)="onSearchTermChanged()">
+        <mat-icon *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm='';onSearchTermChanged()">close</mat-icon>
+    </mat-form-field>
+  </div>
+
   <div class="products">
-    <div *ngFor="let product of productsFilteredByProductCategories" class="card product" style="width: 18rem;">
-      <div class="image-container">
-        <img src="{{ product.fields.image.fields.file.url}}" class="card-img-top image" alt="...">
-      </div>
-      <div class="product card-body">
-        <h5 class="card-title title">
-          <div class="name">{{ product.fields.name }}</div>
-          <div class="additionalInformation">{{ product.fields.additionalInformation }}</div>
-        </h5>
-        <p class="card-text shortDescription"> {{ product.fields.shortDescription }}</p>
-        <div class="prices">
-          <div *ngFor="let price of product.fields.prices" class="price">
-            <div class="quantity">{{price.fields.quantity}}</div>
-            <div class="unit">{{price.fields.unit}}</div>
-            <div class="spacer"></div>
-            <div class="amount">{{price.fields.amount | currency :  'EUR':'symbol':'1.2-2' : 'de' }}</div>
+    <div *ngIf="productsFilteredByProductCategories.length > 0; then thenBlock else elseBlock"></div>
+    <ng-template #thenBlock>
+      <div *ngFor="let product of productsFilteredByProductCategories" class="card product" style="width: 18rem;">
+        <div class="image-container">
+          <ng-container class="image-container" *ngIf="product.fields.image; then thenBlock else elseBlock"></ng-container>
+          <ng-template #thenBlock>
+            <img src="{{ product.fields.image.fields.file.url}}" class="card-img-top image" alt="...">
+          </ng-template>
+          <ng-template #elseBlock>
+            <mat-icon class="placeholder">insert_photo</mat-icon>
+          </ng-template>
+        </div>
+
+
+        <div class="product card-body">
+          <h5 class="card-title title">
+            <div class="name">{{ product.fields.name }}</div>
+            <div class="additionalInformation">{{ product.fields.additionalInformation }}</div>
+          </h5>
+          <p class="card-text shortDescription"> {{ product.fields.shortDescription }}</p>
+          <div class="prices">
+            <div *ngFor="let price of product.fields.prices" class="price">
+              <div class="quantity">{{price.fields.quantity}}</div>
+              <div class="unit">{{price.fields.unit}}</div>
+              <div class="spacer"></div>
+              <div class="amount">{{price.fields.amount | currency :  'EUR':'symbol':'1.2-2' : 'de' }}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ng-template>
+    <ng-template #elseBlock>
+      <div class="jumbotron">
+        <h1 class="display-4"><mat-icon>sentiment_dissatisfied</mat-icon></h1>
+        <p class="lead">Leider ergab deine Suche keiner Treffer. Garnicht so leicht bei {{this.products.length}} Produkten.</p>
+        <hr class="my-4">
+        <p>Versuche es nochmal oder lösche alle Suchfilter.</p>
+        <p class="lead">
+          <a class="btn btn-primary btn-lg" href="#" role="button" (click)="clearAllSearchFilter()">Alle Suchfilter löschen</a>
+        </p>
+      </div>
+    </ng-template>
+
   </div>
 
   <footer>

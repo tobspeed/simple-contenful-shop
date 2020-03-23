@@ -28,7 +28,7 @@
 .content {
   margin: 0px auto 32px;
   padding: 0 5px;
-  max-width: 960px;
+  max-width: 1245px;
   align-items: center;
 }
 
@@ -43,22 +43,48 @@
   }
 }
 
+.searchBar {
+  width: 100%;
+  font-size: 1.25em;
+
+  .searchField {
+    width: 100%;
+
+    .prefix {
+      mat-icon {
+        font-size: 1.7em;
+        vertical-align: text-bottom;
+      }
+    }
+  }
+}
+
 .products {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   .product {
     margin: 10px;
+
     .image-container {
+
       text-align: center;
       vertical-align: middle;
       padding: 1px;
       height: 200px;
       width: 100%;
+
       .image{
         max-height: 200px;
         max-width: 200px;
       }
+
+      .placeholder {
+        font-size: 4em;
+        margin-top: 30%;
+        margin-left: -18px;
+      }
+
     }
 
     .title {
@@ -108,6 +134,7 @@
   padding: 5px;
   text-align: center;
   justify-content: center;
+  flex-wrap: wrap;
 
   a {
     color: #333;
